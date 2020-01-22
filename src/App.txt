@@ -1,0 +1,200 @@
+import React from 'react';
+import './App.css';
+// import { BrowserRouter, Route } from 'react-router-dom';
+// import Home from './components/Home/Home';
+// import Navbar from './components/Header/Navbar';
+// import Footer from './components/Footer/Footer';
+// import Profil from './components/Profil/Profil';
+
+
+
+// Denne lavet om til hooks: https://github.com/lyhd/reactjs/blob/react-dropdown-filter/src/index.js
+
+function App() {
+
+// ----- STATE ---------------------------------------------------------
+  const [value, setValue] = useState('Coconut');
+  const [countries] = useState([
+    { id: "1", country: "Cambodia" },
+    { id: "2", country: "Australia" },
+    { id: "3", country: "US" }
+  ])
+  const [courses, setCourses] = useState([])
+  const [course, setCourse] = useState("");
+  // Fyld state med courses fra fil
+  useEffect(() => {
+    //const c = require("./components/Profil_filter/courses.json");
+    //setCourses(c);
+​
+  }, [])
+​
+  // ----- Events ---------------------------------------------------------
+​
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert("Your favorite flavor is: " + value);
+  }
+​
+  const handleSubmitCourse = (event) => {
+    event.preventDefault();
+    alert("Your selected value is: " + course);
+  }
+​
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+​
+  const handleChangeCourse = (event) => {
+    setCourse(event.target.value);
+  };
+​
+  // ----- Funktion til at udtrække unikke i et array --------------------------------------
+​
+  const getUnique = (arr, comp) => {
+​
+    // OBS! Dette er den oprindelige - virker fint - men lidt for kompliceret:
+    // const unique = arr.map(e => e[comp]) //store the comparison values in array
+    //   // store the keys of the unique objects
+    //   .map((e, i, final) => final.indexOf(e) === i && i)
+    //   // eliminate the dead keys & store unique objects
+    //   .filter(e => arr[e])
+    //   .map(e => arr[e]);
+​
+    // OBS! Denne er noget mere simpel - udnytter javascripts filter-metode (men gør det samme som den udkomm. herover):
+    const unique = arr.filter((arr, index, slf) =>
+      index === slf.findIndex((t) => (
+        t[comp] === arr[comp]
+      ))
+    )
+​
+    return unique;
+  }
+​
+​
+  // ----- Alt det andet ----------------------------------------------------------------------------
+​
+  // countries kommer fra en fil og bliver direkte sendt til getUnique for at isolere unikke countries, 
+  // ... som bliver loopet direkte ud i en dropdown (ikke i state)
+  const c = require("./components/Profil_filter/countries.json");
+  console.log("c", c.world);
+  const uniqueCountry = getUnique(c.world, "country");
+​
+  // courses hentes fra state (som igen kommer fra en fil)
+  const uniqueCourse = getUnique(courses, "tag");
+​
+  const filterDropdown = courses.filter(function (result) {
+    return result.tag === course;
+  });
+​
+  return (
+​
+    <div className="App">
+​
+      <div>
+        <form onSubmit={handleSubmit}>
+​
+          <label>
+            Pick your favorite flavor:
+            <select value={value} onChange={handleChange}>
+              <option value="grapefruit">Grapefruit</option>
+              <option value="lime">Lime</option>
+              <option value="coconut">Coconut</option>
+              <option value="mango">Mango</option>
+            </select>
+          </label>
+​
+          <input type="submit" value="Submit" />
+​
+          <br />
+          <br />
+​
+          <label>
+            Looping through Array
+            <select>
+              {countries.map(item => (
+                <option key={item.id} value={item.country}>
+                  {item.country}
+                </option>
+              ))}
+              {console.log(countries)}
+            </select>
+          </label>
+​
+          <br />
+          <br />
+​
+          <label>
+            Looping through Json File
+            <select>
+              {uniqueCountry.map(item => (
+                <option key={item.id} value={item.country}>
+                  {item.country}
+                </option>
+              ))}
+              {console.log(countries)}
+            </select>
+          </label>
+​
+        </form>
+​
+        <form onSubmit={handleSubmitCourse}>
+​
+          <br />
+          <br />
+​
+          <label>
+​
+            Looping through Courses tag from Json File
+            <select value={course} onChange={handleChangeCourse}>
+              {uniqueCourse.map(course => (
+                <option key={course.id} value={course.tag}>
+                  {course.tag}
+                </option>
+              ))}
+            </select>
+​
+          </label>
+​
+          <input type="submit" value="Submit" />
+​
+          <div>
+            {filterDropdown.map(course => (
+              <div key={course.id} style={{ margin: "10px" }}>
+                {course.course}
+                <br />
+              </div>
+            ))}
+          </div>
+        </form>
+      </div>
+    </div>
+​
+  );
+}
+​
+
+// function App() {
+//   return (
+
+//     <BrowserRouter>
+
+//     <div>
+    
+//         <Navbar />
+
+//           <Route exact path="/" component={Home} />
+//           <Route path="/Profil/Profil" component={Profil} />
+          
+
+
+//           <Footer />
+
+//     </div>
+//    </BrowserRouter>
+
+   
+//   );
+// }
+
+export default App;
+

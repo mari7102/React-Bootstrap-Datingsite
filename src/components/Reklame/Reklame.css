@@ -1,0 +1,28 @@
+.wedding_opacity{
+    background-color: rgba(245, 245, 245, 1);
+    opacity: .7;
+    
+}
+
+.text_opacity{
+    background-color: rgba(245, 245, 245, 1);    
+}
+
+
+.cover_row{
+    background-image: url("/Assets/Profiler/Wedding.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;  
+}
+
+.card {
+    width: 18rem;
+    margin: auto;
+}
+
+@media screen and (max-width: 800px){
+    .cover_row{
+        display: none;
+    }
+}
